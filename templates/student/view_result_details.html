@@ -1,0 +1,70 @@
+{% extends 'student/studentbase.html' %}
+
+{% block content %}
+  {% load static %}
+
+  <div class="container">
+    <h3>Exam Questions and Answers</h3>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>Options</th>
+          <th>Your Answer</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for question in questions %}
+        <tr>
+          <td>{{ question.question }}</td>
+          <td>
+            <ul>
+              <li>{{ question.option1 }}</li>
+              <li>{{ question.option2 }}</li>
+              <li>{{ question.option3 }}</li>
+              <li>{{ question.option4 }}</li>
+            </ul>
+          </td>
+          <td>{{ selected_answers.forloop.counter0 }} {# Replace with the correct variable #}</td>
+          <td>
+            {% if selected_answers.0 == question.answer %}
+              <span class="text-success">Correct</span>
+            {% else %}
+              <span class="text-danger">Incorrect</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <style>
+    /* Add your custom CSS styles here */
+    .container {
+      margin-top: 20px;
+    }
+    table {
+      width: 100%;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    ul li {
+      margin-bottom: 5px;
+    }
+    .text-success {
+      color: green;
+      font-weight: bold;
+    }
+    .text-danger {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+{% endblock content %}
