@@ -12,7 +12,7 @@
 
 
 <div class="jumbotron my-4">
-
+  
   <form class="form" autocomplete="off" onsubmit="return saveAns()"  action="/student/calculate-marks" method="POST">
     {% csrf_token %}
     <h2 style="text-align: center;">Course: {{course.course_name}}</h2>
@@ -59,18 +59,16 @@
   </div>
 
 <script> 
-    function saveAns(){  
-
-        var ele = document.getElementsByTagName('input'); 
-        for(i = 0; i < ele.length; i++) { 
-            if(ele[i].type="radio") { 
-                if(ele[i].checked){        
-                  setCookie(ele[i].name,ele[i].value,3)
-                }
-            } 
-        } 
-          
+  function saveAns() {
+    var ele = document.getElementsByTagName('input');
+    for (i = 0; i < ele.length; i++) {
+        if (ele[i].type == "radio") {  // Use double equals for comparison
+            if (ele[i].checked) {
+                setCookie(ele[i].name, ele[i].value, 3);
+            }
+        }
     }
+}
     
     function setCookie(cname, cvalue, exdays) {
   var d = new Date();

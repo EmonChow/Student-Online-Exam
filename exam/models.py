@@ -25,3 +25,11 @@ class Result(models.Model):
     marks = models.PositiveIntegerField()
     date = models.DateTimeField(auto_now=True)
 
+
+class SelectedAnswer(models.Model):
+    result = models.ForeignKey(Result, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    selected_option = models.CharField(max_length=200)  # You can change the field name as needed
+
+    def __str__(self):
+        return f"Result: {self.result}, Question: {self.question}, Selected Option: {self.selected_option}"

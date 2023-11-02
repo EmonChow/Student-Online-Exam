@@ -1,3 +1,4 @@
+from random import sample
 from django.shortcuts import get_object_or_404, render,redirect,reverse
 from . import forms,models
 from django.db.models import Sum
@@ -68,40 +69,96 @@ def take_exam_view(request,pk):
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
-def start_exam_view(request,pk):
-    course=QMODEL.Course.objects.get(id=pk)
-    questions=QMODEL.Question.objects.all().filter(course=course)
-    if request.method=='POST':
-        pass
-    response= render(request,'student/start_exam.html',{'course':course,'questions':questions})
-    response.set_cookie('course_id',course.id)
+# def start_exam_view(request, pk):
+#     course = QMODEL.Course.objects.get(id=pk)
+#     questions = QMODEL.Question.objects.filter(course=course)
+#     num_questions = course.question_number
+
+#     if num_questions > len(questions):
+#         num_questions = len(questions)
+
+#     selected_questions = sample(list(questions), num_questions)
+
+#     if request.method == 'POST':
+#         pass
+
+#     response = render(request, 'student/start_exam.html', {'course': course, 'questions': selected_questions})
+#     response.set_cookie('course_id', course.id)
+#     return response
+
+def start_exam_view(request, pk):
+    course = get_object_or_404(QMODEL.Course, id=pk)
+    questions = QMODEL.Question.objects.filter(course=course)
+    num_questions = course.question_number
+
+    if num_questions > len(questions):
+        num_questions = len(questions)
+
+    selected_questions = sample(list(questions), num_questions)
+
+    if request.method == 'POST':
+        student = get_object_or_404(models.Student, user=request.user)
+        result = QMODEL.Result.objects.create(student=student, exam=course, marks=0)
+
+        for i, question in enumerate(selected_questions):
+            selected_option = request.POST.get(str(i + 1))
+            QMODEL.SelectedAnswer.objects.create(result=result, question=question, selected_option=selected_option)
+
+        return HttpResponseRedirect('view-result')
+
+    response = render(request, 'student/start_exam.html', {'course': course, 'questions': selected_questions})
+    response.set_cookie('course_id', course.id)
     return response
 
+# @login_required(login_url='studentlogin')
+# @user_passes_test(is_student)
+# def calculate_marks_view(request):
+#     if request.COOKIES.get('course_id') is not None:
+#         course_id = request.COOKIES.get('course_id')
+#         course=QMODEL.Course.objects.get(id=course_id)
+        
+#         total_marks=0
+#         questions=QMODEL.Question.objects.all().filter(course=course)
+#         for i in range(len(questions)):
+            
+#             selected_ans = request.COOKIES.get(str(i+1))
+#             actual_answer = questions[i].answer
+#             if selected_ans == actual_answer:
+#                 total_marks = total_marks + questions[i].marks
+#         student = models.Student.objects.get(user_id=request.user.id)
+#         result = QMODEL.Result()
+#         result.marks=total_marks
+#         result.exam=course
+#         result.student=student
+#         result.save()
 
+#         return HttpResponseRedirect('view-result')
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
 def calculate_marks_view(request):
     if request.COOKIES.get('course_id') is not None:
         course_id = request.COOKIES.get('course_id')
-        course=QMODEL.Course.objects.get(id=course_id)
+        course = QMODEL.Course.objects.get(id=course_id)
         
-        total_marks=0
-        questions=QMODEL.Question.objects.all().filter(course=course)
-        for i in range(len(questions)):
-            
-            selected_ans = request.COOKIES.get(str(i+1))
-            actual_answer = questions[i].answer
+        total_marks = 0
+        questions = QMODEL.Question.objects.all().filter(course=course)
+        selected_answers = []
+
+        for i, question in enumerate(questions):
+            selected_ans = request.COOKIES.get(str(i + 1))
+            actual_answer = question.answer
             if selected_ans == actual_answer:
-                total_marks = total_marks + questions[i].marks
+                total_marks += question.marks
+            selected_answers.append({'question': question, 'selected_option': selected_ans, 'is_correct': selected_ans == actual_answer})
+
         student = models.Student.objects.get(user_id=request.user.id)
         result = QMODEL.Result()
-        result.marks=total_marks
-        result.exam=course
-        result.student=student
+        result.marks = total_marks
+        result.exam = course
+        result.student = student
         result.save()
 
-        return HttpResponseRedirect('view-result')
-
+        return exam_results_view(request, result.id, selected_answers=selected_answers)
 
 
 @login_required(login_url='studentlogin')
@@ -119,6 +176,10 @@ def check_marks_view(request,pk):
     results= QMODEL.Result.objects.all().filter(exam=course).filter(student=student)
     return render(request,'student/check_marks.html',{'results':results})
 
+
+
+
+
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
 def student_marks_view(request):
@@ -126,17 +187,21 @@ def student_marks_view(request):
     return render(request,'student/student_marks.html',{'courses':courses})
 
 
-def view_result_details_view(request, course_id):
-    course = QMODEL.Course.objects.get(id=course_id)
-    student = models.Student.objects.get(user_id=request.user.id)
-    results = QMODEL.Result.objects.filter(exam=course, student=student)
-    
-    # Retrieve the selected answers for this course's questions
-    selected_answers = []
-    if results:
-        result = results[0]
-        questions = QMODEL.Question.objects.filter(course=course)
-        for question in questions:
-            selected_answers.append(request.COOKIES.get(str(question.id)))
-    
-    return render(request, 'student/view_result_details.html', {'questions': questions, 'selected_answers': selected_answers})
+
+
+@login_required(login_url='studentlogin')
+@user_passes_test(is_student)
+
+def exam_results_view(request, result_id, selected_answers=None):
+    result = get_object_or_404(QMODEL.Result, pk=result_id)
+    result_id = result.pk
+
+    return render(request, 'student/view_result_details.html', {'result': result, 'selected_answers': selected_answers})
+# def exam_results_view(request, result_id):
+#     result = get_object_or_404(QMODEL.Result, pk=result_id)
+#     result_id = result.pk
+#     print('result____id: ', result_id)
+#     selected_answers = QMODEL.SelectedAnswer.objects.all().filter(result=result_id)
+#     print('sssssssssssssssssssssss: ', selected_answers)
+
+#     return render(request, 'student/view_result_details.html', {'result': result, 'selected_answers': selected_answers})

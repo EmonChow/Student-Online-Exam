@@ -1,70 +1,62 @@
 {% extends 'student/studentbase.html' %}
-
 {% block content %}
-  {% load static %}
+{% load static %}
 
-  <div class="container">
-    <h3>Exam Questions and Answers</h3>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Question</th>
-          <th>Options</th>
-          <th>Your Answer</th>
-          <th>Result</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for question in questions %}
-        <tr>
-          <td>{{ question.question }}</td>
-          <td>
-            <ul>
-              <li>{{ question.option1 }}</li>
-              <li>{{ question.option2 }}</li>
-              <li>{{ question.option3 }}</li>
-              <li>{{ question.option4 }}</li>
-            </ul>
-          </td>
-          <td>{{ selected_answers.forloop.counter0 }} {# Replace with the correct variable #}</td>
-          <td>
-            {% if selected_answers.0 == question.answer %}
-              <span class="text-success">Correct</span>
-            {% else %}
-              <span class="text-danger">Incorrect</span>
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
-  <style>
-    /* Add your custom CSS styles here */
-    .container {
-      margin-top: 20px;
+  <style media="screen">
+    a:link {
+      text-decoration: none;
     }
-    table {
-      width: 100%;
+
+    h6 {
+      text-align: center;
     }
-    th {
-      background-color: #f2f2f2;
+
+    .row {
+      margin: 100px;
     }
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-    ul li {
-      margin-bottom: 5px;
-    }
-    .text-success {
+
+    /* Add custom styles for correct and incorrect answers */
+    .correct-answer {
       color: green;
       font-weight: bold;
     }
-    .text-danger {
+
+    .incorrect-answer {
       color: red;
       font-weight: bold;
     }
   </style>
+</head>
+
+<div class="container">
+  <h2>Exam Results</h2>
+  <p>Course: {{ result.exam.course_name }}</p>
+  <p>Student: {{ result.student.user.username }}</p>
+  <p>Marks Obtained: {{ result.marks }}</p>
+  <p>Exam Date: {{ result.date }}</p>
+
+  <h3>Questions:</h3>
+  <ul>
+    {% for selected_answer in selected_answers %}
+    <li>
+      <strong>Question {{ forloop.counter }}:</strong>
+      <p>{{ selected_answer.question.question }}</p>
+      <p>Your Answer: 
+        {% if selected_answer.is_correct %}
+          <span class="correct-answer">{{ selected_answer.selected_option }}</span>
+        {% else %}
+          <span class="incorrect-answer">{{ selected_answer.selected_option }}</span>
+        {% endif %}
+      </p>
+      <p>Correct Answer: <span class="correct-answer">{{ selected_answer.question.answer }}</span></p>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
 {% endblock content %}
