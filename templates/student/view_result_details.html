@@ -12,15 +12,27 @@
       text-decoration: none;
     }
 
-    h6 {
+    h2 {
       text-align: center;
+      margin-top: 20px;
     }
 
-    .row {
-      margin: 100px;
+    .result-card {
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin-bottom: 20px;
+      background-color: #f8f8f8;
     }
 
-    /* Add custom styles for correct and incorrect answers */
+    .question {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .user-answer {
+      font-weight: bold;
+    }
+
     .correct-answer {
       color: green;
       font-weight: bold;
@@ -41,22 +53,30 @@
   <p>Exam Date: {{ result.date }}</p>
 
   <h3>Questions:</h3>
-  <ul>
-    {% for selected_answer in selected_answers %}
-    <li>
-      <strong>Question {{ forloop.counter }}:</strong>
-      <p>{{ selected_answer.question.question }}</p>
-      <p>Your Answer: 
-        {% if selected_answer.is_correct %}
-          <span class="correct-answer">{{ selected_answer.selected_option }}</span>
-        {% else %}
-          <span class="incorrect-answer">{{ selected_answer.selected_option }}</span>
-        {% endif %}
-      </p>
-      <p>Correct Answer: <span class="correct-answer">{{ selected_answer.question.answer }}</span></p>
-    </li>
-    {% endfor %}
-  </ul>
+  {% for selected_answer in selected_answers %}
+    {% if selected_answer.selected_option %}
+      <div class="result-card">
+        <div class="question">
+          <strong>Question {{ forloop.counter }}:</strong>
+          <p>{{ selected_answer.question.question }}</p>
+        </div>
+        <div class="user-answer">
+          Your Answer: 
+          {% if selected_answer.is_correct %}
+            <span class="correct-answer">{{ selected_answer.selected_option }}</span>
+          {% else %}
+            <span class="incorrect-answer">{{ selected_answer.selected_option }}</span>
+          {% endif %}
+        </div>
+        <div>
+          Correct Answer: <span class="correct-answer">{{ selected_answer.question.answer }}</span>
+        </div>
+        <div>
+          Marks for this question: {{ selected_answer.question.marks }}
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
 </div>
 
 {% endblock content %}

@@ -197,11 +197,3 @@ def exam_results_view(request, result_id, selected_answers=None):
     result_id = result.pk
 
     return render(request, 'student/view_result_details.html', {'result': result, 'selected_answers': selected_answers})
-# def exam_results_view(request, result_id):
-#     result = get_object_or_404(QMODEL.Result, pk=result_id)
-#     result_id = result.pk
-#     print('result____id: ', result_id)
-#     selected_answers = QMODEL.SelectedAnswer.objects.all().filter(result=result_id)
-#     print('sssssssssssssssssssssss: ', selected_answers)
-
-#     return render(request, 'student/view_result_details.html', {'result': result, 'selected_answers': selected_answers})

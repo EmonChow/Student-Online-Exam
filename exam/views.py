@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect,reverse
+from django.shortcuts import get_object_or_404, render,redirect,reverse
 from . import forms,models
 from django.db.models import Sum
 from django.contrib.auth.models import Group
@@ -13,7 +13,7 @@ from student import models as SMODEL
 from teacher import forms as TFORM
 from student import forms as SFORM
 from django.contrib.auth.models import User
-
+from django.contrib import messages 
 
 
 def home_view(request):
@@ -241,6 +241,24 @@ def admin_add_question_view(request):
 def admin_view_question_view(request):
     courses= models.Course.objects.all()
     return render(request,'exam/admin_view_question.html',{'courses':courses})
+
+@login_required(login_url='adminlogin')
+def admin_update_question_view(request, question_id):
+    question = get_object_or_404(models.Question, id=question_id)
+
+    if request.method == 'POST':
+        questionForm = forms.QuestionForm(request.POST, instance=question)
+        if questionForm.is_valid():
+            questionForm.save()
+            messages.success(request, 'Question updated successfully')  # Add a success message
+            # Redirect to the view_question view for the specific course
+            return redirect('view-question', pk=question.course_id)
+
+    else:
+        questionForm = forms.QuestionForm(instance=question)
+
+    return render(request, 'exam/update_question.html', {'questionForm': questionForm})
+
 
 @login_required(login_url='adminlogin')
 def view_question_view(request,pk):

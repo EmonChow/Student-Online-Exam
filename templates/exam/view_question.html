@@ -43,7 +43,13 @@
         <td> {{c.question}}</td>
         
         <td>{{c.marks}}</td>
-        <td><a class="btn btn-danger btn-xs" style="border-radius: 0%;" href="{% url 'delete-question' c.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>
+        <td>
+          <a class="btn btn-danger btn-xs" style="border-radius: 0%;" href="{% url 'delete-question' c.id  %}"><span class="glyphicon glyphicon-trash"></span></a>
+          <a class="btn btn-info btn-xs" style="border-radius: 0%;" href="{% url 'admin-update-question' c.id %}">
+            Update
+          </a> 
+        
+        </td>
         
       </tr>
       {% endfor %}

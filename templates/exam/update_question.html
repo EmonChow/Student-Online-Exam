@@ -1,0 +1,103 @@
+{% extends 'exam/adminbase.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background-color: #f7f7f7;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+            padding: 20px;
+            margin: 100px auto;
+            max-width: 500px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        .form-control {
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            height: 40px;
+            padding: 10px;
+        }
+        .btn-success {
+            background-color: #5cb85c;
+            border: none;
+            border-radius: 3px;
+            color: #fff;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .btn-success:hover {
+            background-color: #449d44;
+        }
+    </style>
+</head>
+
+<div class="container">
+    <h2>Update Question</h2>
+    <form method="POST" autocomplete="off" action="{% url 'admin-update-question' questionForm.instance.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="course">Course</label>
+            {{ questionForm.courseID|attr:"readonly:true class=form-control" }}
+        </div>
+        
+        <div class="form-group">
+            <label for="question">Question</label>
+            {{ questionForm.question|attr:"required:true class=form-control" }}
+        </div>
+        
+        <div class="form-group">
+            <label for="marks">Marks</label>
+            {{ questionForm.marks|attr:"required:true class=form-control" }}
+        </div>
+        
+        <div class="form-group">
+            <label for="option1">Option 1</label>
+            {{ questionForm.option1|attr:"required:true class=form-control" }}
+        </div>
+        
+        <div class="form-group">
+            <label for="option2">Option 2</label>
+            {{ questionForm.option2|attr:"required:true class=form-control" }}
+        </div>
+        
+        <div class="form-group">
+            <label for="option3">Option 3</label>
+            {{ questionForm.option3|attr:"required:true class=form-control" }}
+        </div>
+        
+        <div class="form-group">
+            <label for="option4">Option 4</label>
+            {{ questionForm.option4|attr:"required:true class=form-control" }}
+        </div>
+        
+        <div class="form-group">
+            <label for="answer">Correct Answer</label>
+            {{ questionForm.answer|attr:"required:true class=form-control" }}
+        </div>
+
+        <button type="submit" class="btn btn-success">Update Question</button>
+    </form>
+</div>
+</body>
+</html>
+{% endblock content %}
