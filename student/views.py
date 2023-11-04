@@ -9,7 +9,7 @@ from django.conf import settings
 from datetime import date, timedelta
 from exam import models as QMODEL
 from teacher import models as TMODEL
-
+from collections import defaultdict
 
 #for showing signup/login button for student
 def studentclick_view(request):
@@ -70,7 +70,7 @@ def take_exam_view(request,pk):
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
 # def start_exam_view(request, pk):
-#     course = QMODEL.Course.objects.get(id=pk)
+#     course = get_object_or_404(QMODEL.Course, id=pk)
 #     questions = QMODEL.Question.objects.filter(course=course)
 #     num_questions = course.question_number
 
@@ -80,22 +80,57 @@ def take_exam_view(request,pk):
 #     selected_questions = sample(list(questions), num_questions)
 
 #     if request.method == 'POST':
-#         pass
+#         student = get_object_or_404(models.Student, user=request.user)
+#         result = QMODEL.Result.objects.create(student=student, exam=course, marks=0)
+
+#         for i, question in enumerate(selected_questions):
+#             selected_option = request.POST.get(str(i + 1))
+#             QMODEL.SelectedAnswer.objects.create(result=result, question=question, selected_option=selected_option)
+
+#         return HttpResponseRedirect('view-result')
 
 #     response = render(request, 'student/start_exam.html', {'course': course, 'questions': selected_questions})
 #     response.set_cookie('course_id', course.id)
 #     return response
-
 def start_exam_view(request, pk):
     course = get_object_or_404(QMODEL.Course, id=pk)
     questions = QMODEL.Question.objects.filter(course=course)
+
     num_questions = course.question_number
+    num_subjects = len(QMODEL.Question.Subject.choices)
 
     if num_questions > len(questions):
         num_questions = len(questions)
 
-    selected_questions = sample(list(questions), num_questions)
+    # Calculate the minimum number of questions per subject (3 per subject)
+    min_questions_per_subject = 0
 
+    selected_questions = []
+    subject_counts = defaultdict(int)
+
+    # Create a dictionary to keep track of available questions for each subject
+    available_questions_by_subject = {subject[0]: list(questions.filter(subject=subject[0])) for subject in QMODEL.Question.Subject.choices}
+
+    # Ensure at least 3 questions for each subject
+    for subject in QMODEL.Question.Subject.choices:
+        subject_selected_questions = sample(available_questions_by_subject[subject[0]], min_questions_per_subject)
+        selected_questions.extend(subject_selected_questions)
+        subject_counts[subject[0]] = len(subject_selected_questions)
+
+    # Randomly select remaining questions to reach 'num_questions'
+    remaining_questions = num_questions - len(selected_questions)
+
+    # Create a pool of remaining questions
+    remaining_questions_pool = [q for q in questions if q not in selected_questions]
+
+    if remaining_questions > 0:
+        if remaining_questions <= len(remaining_questions_pool):
+            additional_selected_questions = sample(remaining_questions_pool, remaining_questions)
+            selected_questions.extend(additional_selected_questions)
+        else:
+            remaining_questions = len(remaining_questions_pool)
+            additional_selected_questions = sample(remaining_questions_pool, remaining_questions)
+            selected_questions.extend(additional_selected_questions) 
     if request.method == 'POST':
         student = get_object_or_404(models.Student, user=request.user)
         result = QMODEL.Result.objects.create(student=student, exam=course, marks=0)
@@ -110,29 +145,8 @@ def start_exam_view(request, pk):
     response.set_cookie('course_id', course.id)
     return response
 
-# @login_required(login_url='studentlogin')
-# @user_passes_test(is_student)
-# def calculate_marks_view(request):
-#     if request.COOKIES.get('course_id') is not None:
-#         course_id = request.COOKIES.get('course_id')
-#         course=QMODEL.Course.objects.get(id=course_id)
-        
-#         total_marks=0
-#         questions=QMODEL.Question.objects.all().filter(course=course)
-#         for i in range(len(questions)):
-            
-#             selected_ans = request.COOKIES.get(str(i+1))
-#             actual_answer = questions[i].answer
-#             if selected_ans == actual_answer:
-#                 total_marks = total_marks + questions[i].marks
-#         student = models.Student.objects.get(user_id=request.user.id)
-#         result = QMODEL.Result()
-#         result.marks=total_marks
-#         result.exam=course
-#         result.student=student
-#         result.save()
 
-#         return HttpResponseRedirect('view-result')
+
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
 def calculate_marks_view(request):

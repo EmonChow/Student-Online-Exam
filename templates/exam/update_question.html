@@ -59,7 +59,10 @@
             <label for="course">Course</label>
             {{ questionForm.courseID|attr:"readonly:true class=form-control" }}
         </div>
-        
+        <div class="form-group">
+            <label for="course">Subject</label>
+            {{ questionForm.subject|attr:"readonly:true class=form-control" }}
+        </div>
         <div class="form-group">
             <label for="question">Question</label>
             {{ questionForm.question|attr:"required:true class=form-control" }}

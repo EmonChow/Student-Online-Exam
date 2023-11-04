@@ -211,7 +211,7 @@ def update_course_view(request, pk):
         courseForm = forms.CourseForm(request.POST, instance=courses)
         if courseForm.is_valid():
             courseForm.save()
-            messages.success(request, 'courseForm updated successfully')  # Add a success message
+            messages.success(request, 'courseForm updated successfully') 
            
             return redirect('admin-view-course')
 
@@ -260,10 +260,14 @@ def admin_add_question_view(request):
     return render(request,'exam/admin_add_question.html',{'questionForm':questionForm})
 
 
+
+
 @login_required(login_url='adminlogin')
 def admin_view_question_view(request):
     courses= models.Course.objects.all()
     return render(request,'exam/admin_view_question.html',{'courses':courses})
+
+
 
 @login_required(login_url='adminlogin')
 def admin_update_question_view(request, question_id):
@@ -274,7 +278,7 @@ def admin_update_question_view(request, question_id):
         if questionForm.is_valid():
             questionForm.save()
             messages.success(request, 'Question updated successfully')  # Add a success message
-            # Redirect to the view_question view for the specific course
+         
             return redirect('view-question', pk=question.course_id)
 
     else:
@@ -283,10 +287,14 @@ def admin_update_question_view(request, question_id):
     return render(request, 'exam/update_question.html', {'questionForm': questionForm})
 
 
+
+
 @login_required(login_url='adminlogin')
 def view_question_view(request,pk):
     questions=models.Question.objects.all().filter(course_id=pk)
     return render(request,'exam/view_question.html',{'questions':questions})
+
+
 
 @login_required(login_url='adminlogin')
 def delete_question_view(request,pk):
@@ -294,10 +302,14 @@ def delete_question_view(request,pk):
     question.delete()
     return HttpResponseRedirect('/admin-view-question')
 
+
+
 @login_required(login_url='adminlogin')
 def admin_view_student_marks_view(request):
     students= SMODEL.Student.objects.all()
     return render(request,'exam/admin_view_student_marks.html',{'students':students})
+
+
 
 @login_required(login_url='adminlogin')
 def admin_view_marks_view(request,pk):
@@ -305,6 +317,7 @@ def admin_view_marks_view(request,pk):
     response =  render(request,'exam/admin_view_marks.html',{'courses':courses})
     response.set_cookie('student_id',str(pk))
     return response
+
 
 @login_required(login_url='adminlogin')
 def admin_check_marks_view(request,pk):
@@ -315,7 +328,6 @@ def admin_check_marks_view(request,pk):
     results= models.Result.objects.all().filter(exam=course).filter(student=student)
     return render(request,'exam/admin_check_marks.html',{'results':results})
     
-
 
 
 

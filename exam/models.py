@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils.translation import gettext_lazy as _
 from student.models import Student
 class Course(models.Model):
    course_name = models.CharField(max_length=50)
@@ -9,6 +9,20 @@ class Course(models.Model):
         return self.course_name
 
 class Question(models.Model):
+    class Subject(models.TextChoices):
+        SUBJECT_ONE = 'Subject_One', _('SUBJECT_ONE')
+        SUBJECT_TWO = 'Subject_Two', _('SUBJECT_TWO')
+        SUBJECT_THREE = 'Subject_Three', _('SUBJECT_THREE')
+        SUBJECT_FOUR = 'Subject_Four', _('SUBJECT_FOUR')
+        SUBJECT_FIVE = 'Subject_Five', _('SUBJECT_FIVE')
+        SUBJECT_SIX = 'Subject_Six', _('SUBJECT_SIX')
+        SUBJECT_SEVEN = 'Subject_Seven', _('SUBJECT_SEVEN')
+        SUBJECT_EIGHT = 'Subject_Eight', _('SUBJECT_EIGHT')
+        SUBJECT_NINE = 'Subject_Nine', _('SUBJECT_NINE')
+        SUBJECT_TEN = 'Subject_Ten', _('SUBJECT_TEN')   
+        SUBJECT_ELEVEN = 'Subject_Eleven', _('SUBJECT_ELEVEN') 
+      
+    subject =  models.CharField(max_length=15, choices=Subject.choices, null=True, blank=True)  
     course=models.ForeignKey(Course,on_delete=models.CASCADE)
     marks=models.PositiveIntegerField()
     question=models.CharField(max_length=600)

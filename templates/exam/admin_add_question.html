@@ -21,10 +21,12 @@
 <form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
     {%csrf_token%}
     <div class="form-group">
-        <label for="question">Course</label>
-      {% render_field questionForm.courseID|attr:'required:true' class="form-control"  %}
+      <label for="question">Course</label>
+    {% render_field questionForm.courseID|attr:'required:true' class="form-control"  %}
+      <br>
+      <label for="question">Subject</label>
+      {% render_field questionForm.subject|attr:'required:true' class="form-control"  %}
         <br>
-
       <label for="question">Question</label>
       {% render_field questionForm.question|attr:'required:true' class="form-control" placeholder="Example: Which one of the following is not a phase of Prototyping Model?" %}
         <br>
