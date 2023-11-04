@@ -17,22 +17,25 @@
     
   </style>
 </head>
-<h2 style="text-align:center;">Add Examnination</h2>
+<h2 style="text-align:center;">Update Examnination</h2>
 <form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
     {%csrf_token%}
     <div class="form-group">
-      <label for="course_name">Examnination Name</label>
-      {% render_field courseForm.course_name class="form-control" placeholder="Example: Software Engineering" %}
+        <label for="option1">Examnination Name</label>
+        {{ courseForm.course_name|attr:"required:true class=form-control" }}
+         
+        <label for="option1">Total Question</label>
+        {{ courseForm.question_number|attr:"required:true class=form-control" }}
 
-      <label for="question_number">Total Question</label>
-      {% render_field courseForm.question_number class="form-control" placeholder="Example: 50" %}
+        <label for="option1">Total Marks</label>
+        {{ courseForm.total_marks|attr:"required:true class=form-control" }}
 
-      <label for="total_marks">Total Marks</label>
-      {% render_field courseForm.total_marks class="form-control" placeholder="Example: 100" %}
     </div>
+
+    
     
 
-    <button type="submit" class="btn btn-success" style="border-radius:0px;">Add Examnination Info</button>
+    <button type="submit" class="btn btn-success" style="border-radius:0px;">Update Examnination Info</button>
   </form>
 <br><br><br>
 {% endblock content %}

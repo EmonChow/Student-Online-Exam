@@ -203,10 +203,33 @@ def admin_add_course_view(request):
     return render(request,'exam/admin_add_course.html',{'courseForm':courseForm})
 
 
+
+@login_required(login_url='adminlogin')
+def update_course_view(request, pk):
+    courses = models.Course.objects.get(pk = pk)
+    if request.method == 'POST':
+        courseForm = forms.CourseForm(request.POST, instance=courses)
+        if courseForm.is_valid():
+            courseForm.save()
+            messages.success(request, 'courseForm updated successfully')  # Add a success message
+           
+            return redirect('admin-view-course')
+
+    else:
+        courseForm = forms.CourseForm(instance=courses)
+
+    return render(request, 'exam/update_course.html', {'courseForm': courseForm})
+
+
+
+
 @login_required(login_url='adminlogin')
 def admin_view_course_view(request):
     courses = models.Course.objects.all()
     return render(request,'exam/admin_view_course.html',{'courses':courses})
+
+
+
 
 @login_required(login_url='adminlogin')
 def delete_course_view(request,pk):
