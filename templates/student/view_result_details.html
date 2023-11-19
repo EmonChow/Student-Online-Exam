@@ -61,7 +61,7 @@
           <p>{{ selected_answer.question.question }}</p>
         </div>
         <div class="user-answer">
-          Your Answer: 
+          Your Answer:
           {% if selected_answer.is_correct %}
             <span class="correct-answer">{{ selected_answer.selected_option }}</span>
           {% else %}
@@ -73,6 +73,15 @@
         </div>
         <div>
           Marks for this question: {{ selected_answer.question.marks }}
+        </div>
+        <div>
+          Options:
+          <ol>
+            <li {% if selected_answer.selected_option == selected_answer.question.option1 %}class="correct-answer"{% endif %}>{{ selected_answer.question.option1 }}</li>
+            <li {% if selected_answer.selected_option == selected_answer.question.option2 %}class="correct-answer"{% endif %}>{{ selected_answer.question.option2 }}</li>
+            <li {% if selected_answer.selected_option == selected_answer.question.option3 %}class="correct-answer"{% endif %}>{{ selected_answer.question.option3 }}</li>
+            <li {% if selected_answer.selected_option == selected_answer.question.option4 %}class="correct-answer"{% endif %}>{{ selected_answer.question.option4 }}</li>
+          </ol>
         </div>
       </div>
     {% endif %}
