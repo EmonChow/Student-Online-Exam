@@ -1,6 +1,7 @@
 from django.urls import path,include
 from django.contrib import admin
 from exam import views
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib.auth.views import LogoutView,LoginView
 urlpatterns = [
    
@@ -51,3 +52,4 @@ urlpatterns = [
 
 
 ]
+urlpatterns += staticfiles_urlpatterns()
