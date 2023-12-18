@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import dj_database_url
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
@@ -85,19 +85,19 @@ WSGI_APPLICATION = 'onlinexam.wsgi.application'
 
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'onlinetest',
-#         'USER': 'postgres',
-#         'PASSWORD':'astagferullah',
-#         'HOST': 'localhost',
-#     }
-# }
 DATABASES = {
-#    "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
-   'default': dj_database_url.parse('postgres://online_exam_user:lriuHabITd7E69fcToLuwKwkqiLerX1r@dpg-cm02r8eg1b2c73clt8r0-a.singapore-postgres.render.com/online_exam'),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'onlinetest',
+        'USER': 'postgres',
+        'PASSWORD':'astagferullah',
+        'HOST': 'localhost',
+    }
 }
+# DATABASES = {
+# #    "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
+#    'default': dj_database_url.parse('postgres://online_exam_user:lriuHabITd7E69fcToLuwKwkqiLerX1r@dpg-cm02r8eg1b2c73clt8r0-a.singapore-postgres.render.com/online_exam'),
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
