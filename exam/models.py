@@ -24,6 +24,9 @@ class Question(models.Model):
       
     subject =  models.CharField(max_length=15, choices=Subject.choices, null=True, blank=True)  
     course=models.ForeignKey(Course,on_delete=models.CASCADE)
+
+    question_number = models.IntegerField(null=True, blank=True)
+
     marks=models.PositiveIntegerField()
     question=models.CharField(max_length=600)
     option1=models.CharField(max_length=200)
@@ -41,7 +44,7 @@ class Result(models.Model):
  
 
 class SelectedAnswer(models.Model):
-    result = models.ForeignKey(Result, on_delete=models.CASCADE)
+    result = models.ForeignKey(Result, on_delete=models.CASCADE, related_name='selectedanswer_set')
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     selected_option = models.CharField(max_length=200)  # You can change the field name as needed
 

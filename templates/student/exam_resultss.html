@@ -1,0 +1,25 @@
+{% extends 'student/studentbase.html' %}
+{% block content %}
+{% load static %}
+
+<div class="jumbotron my-4">
+    <h2 style="text-align: center;">Exam Results</h2>
+    <p>Student: {{ result.student.user.username }}</p>
+    <p>Total Marks: {{ result.marks }}</p>
+
+    <h3>Questioggns:</h3>
+    <ul>
+        {% for selected_answer in selected_answers %}
+            <li>
+                {{ selected_answer.question.question }}
+                {% if selected_answer.is_correct %}
+                    <span style="color: green;">(Correct)</span>
+                {% else %}
+                    <span style="color: red;">(Incorrect)</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock content %}

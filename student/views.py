@@ -94,7 +94,8 @@ def take_exam_view(request,pk):
 #     return response
 def start_exam_view(request, pk):
     course = get_object_or_404(QMODEL.Course, id=pk)
-    questions = QMODEL.Question.objects.filter(course=course)
+    questions = QMODEL.Question.objects.filter(course=course).order_by('question_number')
+
 
     num_questions = course.question_number
     num_subjects = len(QMODEL.Question.Subject.choices)
@@ -155,7 +156,8 @@ def calculate_marks_view(request):
         course = QMODEL.Course.objects.get(id=course_id)
         
         total_marks = 0
-        questions = QMODEL.Question.objects.all().filter(course=course)
+        questions = QMODEL.Question.objects.all().filter(course=course).order_by('question_number')
+
         selected_answers = []
 
         for i, question in enumerate(questions):

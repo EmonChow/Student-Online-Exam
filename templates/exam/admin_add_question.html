@@ -33,6 +33,9 @@
       <label for="question_number">Marks</label>
       {% render_field questionForm.marks|attr:'required:true' class="form-control" placeholder="Example: 5" %}
         <br>
+      <label for="question_number">Question Number</label>
+      {% render_field questionForm.question_number|attr:'required:true' class="form-control" placeholder="Example: 5" %}
+        <br>
       <label for="option1">Option 1</label>
       {% render_field questionForm.option1|attr:'required:true' class="form-control" placeholder="Example: Quick Design" %}
         <br>

@@ -72,7 +72,10 @@
             <label for="marks">Marks</label>
             {{ questionForm.marks|attr:"required:true class=form-control" }}
         </div>
-        
+        <div class="form-group">
+            <label for="marks">Question Number</label>
+            {{ questionForm.question_number|attr:"required:true class=form-control" }}
+        </div>
         <div class="form-group">
             <label for="option1">Option 1</label>
             {{ questionForm.option1|attr:"required:true class=form-control" }}

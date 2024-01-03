@@ -53,7 +53,7 @@
   <p>Exam Date: {{ result.date }}</p>
 
   <h3>Questions:</h3>
-  {% for selected_answer in selected_answers %}
+  {% for selected_answer in selected_answers|dictsort:"question.question_number" %}
     {% if selected_answer.selected_option %}
       <div class="result-card">
         <div class="question">
